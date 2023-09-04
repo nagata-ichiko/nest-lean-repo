@@ -12,7 +12,7 @@ async function bootstrap() {
 
   // TODO: prodモードだとswaggerを出力しないように
   createSwaggerDocument(app);
-  await app.listen(3000);
+  await app.listen(3001);
 }
 
 async function createSwaggerDocument(app: INestApplication) {
