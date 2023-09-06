@@ -13,7 +13,6 @@ import * as csurf from 'csurf';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.use;
   // TODO: prodモードだとswaggerを出力しないように
   createSwaggerDocument(app);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
@@ -25,9 +24,9 @@ async function bootstrap() {
   app.use(
     csurf({
       cookie: {
-        httpOnly: true,
+        httpOnly: false,
         sameSite: 'none',
-        secure: true,
+        secure: false,
       },
       value: (req: Request) => {
         return req.header('csrf-token');
