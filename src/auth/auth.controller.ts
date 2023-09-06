@@ -19,11 +19,13 @@ export class AuthController {
 
   @Get('/csrf')
   getCsrfToken(@Req() req: Request): Csrf {
+    // console.log('hoge');
     return { csrfToken: req.csrfToken() };
   }
 
   @Post('signup')
   signUp(@Body() dto: AuthDto): Promise<Msg> {
+    // console.log('hoge');
     return this.authService.signUp(dto);
   }
 
@@ -33,6 +35,7 @@ export class AuthController {
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
   ): Promise<Msg> {
+    console.log('hogessss');
     const jwt = await this.authService.login(dto);
     res.cookie('access_token', jwt.accessToken, {
       httpOnly: true,

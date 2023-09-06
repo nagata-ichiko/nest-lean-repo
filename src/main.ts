@@ -2,16 +2,39 @@ import { NestFactory } from '@nestjs/core';
 import { dump } from 'js-yaml';
 import { writeFile } from 'fs-extra';
 import { join } from 'path';
+import { Request } from 'express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { mkdirSync } from 'fs';
+import * as cookieParser from 'cookie-parser';
+import * as csurf from 'csurf';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use;
   // TODO: prodモードだとswaggerを出力しないように
   createSwaggerDocument(app);
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.enableCors({
+    credentials: false,
+    origin: ['http://localhost:3000'],
+  });
+  app.use(cookieParser());
+  app.use(
+    csurf({
+      cookie: {
+        httpOnly: true,
+        sameSite: 'none',
+        secure: true,
+      },
+      value: (req: Request) => {
+        return req.header('csrf-token');
+      },
+    }),
+  );
+
   await app.listen(process.env.PORT);
 }
 
